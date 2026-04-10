@@ -26,7 +26,6 @@ const register = async (req, res) => {
       password: hashedPassword,
       role: role || 'freelancer',
     });
-
     res.status(201).json({
       message: 'User registered successfully!',
       user: {
@@ -52,7 +51,7 @@ const login = async (req, res) => {
       expiresIn: JWT_EXPIRES_IN,
     });
 
-    res.json({
+    res.status(200).json({
       token,
       user: { id: user._id, fullName: user.fullName, role: user.role },
     });
