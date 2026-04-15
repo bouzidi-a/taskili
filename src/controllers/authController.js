@@ -1,33 +1,36 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/jwt');
+const { supabase } = require('../lib/supabaseClient');
 
+// ─── REGISTER ────────────────────────────────────────────
 const register = async (req, res) => {
   try {
     const { fullName, email, password, confirmPassword, role } = req.body;
 
+    // Basic validations (keep yours)
     if (password !== confirmPassword)
       return res.status(400).json({ error: 'Passwords do not match!' });
 
     if (password.length < 8)
       return res.status(400).json({ error: 'Password must be at least 8 characters' });
 
-    const userExists = await User.findOne({ email });
-    if (userExists)
-      return res.status(400).json({ error: 'Email already registered' });
+    // 1. Create user in Supabase (handles hashing + confirmation email)
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    if (error)
+      return res.status(400).json({ error: error.message });
 
+    // 2. Store extra fields in MongoDB, linked by Supabase user id
     const newUser = await User.create({
+      supabaseId: data.user.id,   // ← link to Supabase
       fullName,
       email,
-      password: hashedPassword,
       role: role || 'freelancer',
+      // NO password field anymore — Supabase owns it
     });
-    res.status(201).json({
-      message: 'User registered successfully!',
+
+    return res.status(201).json({
+      message: 'Registration successful! Please check your email to confirm your account.',
       user: {
         id: newUser._id,
         fullName: newUser.fullName,
@@ -36,25 +39,42 @@ const register = async (req, res) => {
         createdAt: newUser.createdAt,
       },
     });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+// ─── LOGIN ────────────────────────────────────────────────
 const login = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user || !(await bcrypt.compare(req.body.password, user.password)))
-      return res.status(400).json({ error: 'Wrong email or password' });
+    const { email, password } = req.body;
 
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
+    // 1. Supabase checks credentials + email confirmed
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error)
+      return res.status(400).json({ error: error.message });
+    // if email not confirmed, Supabase returns:
+    // "Email not confirmed" automatically ✅
+
+    // 2. Fetch extra fields from MongoDB using supabase user id
+    const user = await User.findOne({ supabaseId: data.user.id });
+
+    if (!user)
+      return res.status(404).json({ error: 'User profile not found' });
+
+    return res.status(200).json({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+      },
     });
 
-    res.status(200).json({
-      token,
-      user: { id: user._id, fullName: user.fullName, role: user.role },
-    });
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
   }
