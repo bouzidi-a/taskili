@@ -1,0 +1,49 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 17px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  background-color: #ffffff;
+  color: #213547;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+.filter-group select,
+.filter-group input[type="date"] {
+  background-color: #f3f4f6 !important;
+  border: none !important;
+  color: #333 !important;
+}
+.filter-group select,
+.filter-group input[type="date"],
+.filter-group input[type="text"] {
+  color: #9ca3af !important;
+}
+
+.filter-group select:focus,
+.filter-group input[type="date"]:focus {
+  color: #333 !important;
+}

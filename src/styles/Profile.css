@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset Context for Profile Page */
+.profile-page {
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+}
+
+/* Sub Navigation */
+.profile-subnav {
+  background-color: #1a4eb8;
+  padding: 15px 8%;
+}
+
+.profile-subnav-container {
+  display: flex;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-subnav a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.profile-subnav a:hover,
+.profile-subnav a.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Hero Cover */
+.profile-cover {
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e2e8f0; /* Fallback */
+}
+
+/* Main Container */
+.profile-main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 80px 20px;
+  position: relative;
+}
+
+/* Header Info */
+.profile-header {
+  position: relative;
+  background: transparent;
+  margin-top: -75px; 
+  padding-bottom: 30px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.profile-avatar-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+  background: white;
+  padding: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.edit-avatar-btn {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.profile-actions {
+  position: absolute;
+  top: 90px;
+  right: 0;
+}
+
+.edit-profile-btn {
+  background: #e2e8f0;
+  color: #334155;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-user-details {
+  margin-top: 15px;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.profile-username {
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.profile-rating {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.profile-rating .stars {
+  color: #1a202c; /* The stars in user screenshot are black/dark grey */
+  letter-spacing: 2px;
+}
+
+.profile-bio {
+  margin-top: 25px;
+}
+
+.bio-label {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 5px;
+}
+
+.bio-text {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+/* Sections */
+.profile-sections {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.profile-section {
+  padding-bottom: 20px;
+}
+
+.profile-section.border-top {
+  padding-top: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.add-btn {
+  background: transparent;
+  color: #333;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.add-btn:hover {
+  color: #1a4eb8;
+}
+
+.section-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 40px 0;
+}
+
+.empty-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.cv-icon {
+  background-color: #64748b; /* Grayish blue for CV */
+  position: relative;
+}
+
+.portfolio-icon {
+  background-color: transparent;
+  color: #64748b;
+}
+
+.portfolio-icon svg {
+  width: 50px;
+  height: 50px;
+  fill: #64748b;
+}
+
+.section-empty-state p {
+  color: #1a4eb8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.empty-text {
+  color: #1a4eb8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Footer Section specific for Profile */
+.profile-footer {
+  background: #ffffff;
+  padding: 60px 8% 20px;
+  border-top: 1px solid #eef2ff;
+}
+
+.footer-cols {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 40px;
+  padding-bottom: 50px;
+}
+
+.f-col h4 {
+  margin-bottom: 25px;
+  font-size: 16px;
+  color: #1d2b53;
+  font-weight: 600;
+}
+
+.f-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.f-col li {
+  color: #6b7280;
+  margin-bottom: 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.logo-img {
+  height: 35px;
+  margin-bottom: 20px;
+}
+
+.about p {
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.6;
+  max-width: 250px;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.copyright {
+  text-align: center;
+  border-top: 1px solid #eef2ff;
+  padding-top: 30px;
+  color: #aaa;
+  font-size: 12px;
+}

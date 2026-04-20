@@ -1,0 +1,32 @@
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+}
+
+.tasks-page {
+  min-height: 100vh;
+  background: white;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-wrapper {
+  width: 100%;
+  flex: 1;
+}
+
+.container {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(100vh - 80px - 200px);
+}
+
+.menu-section {
+  flex: 1;
+  background: white;
+  border-left: 2px solid #e1e3e5;
+  overflow: hidden;
+}
