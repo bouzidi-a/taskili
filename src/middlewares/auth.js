@@ -1,8 +1,7 @@
-
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-protect = async (req, res, next) => {
+const protect = async (req, res, next) => {
   try {
     let token;
 
@@ -27,4 +26,13 @@ protect = async (req, res, next) => {
   }
 };
 
-module.exports = protect;
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: `Access denied. Required role: ${roles.join(' or ')}` });
+    }
+    next();
+  };
+};
+
+module.exports = { protect, restrictTo };

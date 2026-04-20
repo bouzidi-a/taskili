@@ -1,16 +1,9 @@
-const validateWorkInput = (req, res, next) => {
-  const { title, price, category, location } = req.body;
+const { validationResult } = require('express-validator');
 
-  if (!title || title.length < 5)
-    return res.status(400).json({ error: 'Title is too short (min 5 chars)' });
-
-  if (!price || price <= 0)
-    return res.status(400).json({ error: 'Valid price is required' });
-
-  if (!category || !location)
-    return res.status(400).json({ error: 'Category and Location are required' });
-
+module.exports = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   next();
 };
-
-module.exports = { validateWorkInput };
