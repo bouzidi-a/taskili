@@ -1,72 +1,54 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { supabase } = require('../lib/supabaseClient');
+const User = require("../models/user");
+const generateToken = require("../utils/generateToken");
 
-// ─── REGISTER ────────────────────────────────────────────
+// Register
 const register = async (req, res) => {
   try {
     const { fullName, email, password, confirmPassword, role } = req.body;
-
-    // Basic validations (keep yours)
+    // exist user
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+    // password and confirm password do not match
     if (password !== confirmPassword)
-      return res.status(400).json({ error: 'Passwords do not match!' });
-
-    if (password.length < 8)
-      return res.status(400).json({ error: 'Password must be at least 8 characters' });
-
-    // 1. Create user in Supabase (handles hashing + confirmation email)
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (error)
-      return res.status(400).json({ error: error.message });
-
-    // 2. Store extra fields in MongoDB, linked by Supabase user id
-    const newUser = await User.create({
-      supabaseId: data.user.id,   // ← link to Supabase
-      fullName,
-      email,
-      role: role || 'freelancer',
-      // NO password field anymore — Supabase owns it
-    });
-
+      return res.status(400).json({ error: "Passwords do not match!" });
+    // creating user
+    const user = await User.create({ fullName, email, password, role });
+    // generate new user token
+    const token = generateToken(user._id);
+    // send the respose back
     return res.status(201).json({
-      message: 'Registration successful! Please check your email to confirm your account.',
+      message: "User registered successfully",
+      token,
       user: {
-        id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        role: newUser.role,
-        createdAt: newUser.createdAt,
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
       },
     });
-
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ Status: "failed", message: err.message });
   }
 };
 
-// ─── LOGIN ────────────────────────────────────────────────
+// Login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. Supabase checks credentials + email confirmed
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const user = await User.findOne({ email }).select("+password");
 
-    if (error)
-      return res.status(400).json({ error: error.message });
-    // if email not confirmed, Supabase returns:
-    // "Email not confirmed" automatically ✅
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(404).json({ message: "Invalid email or password" });
+    }
+    const token = generateToken(user._id);
 
-    // 2. Fetch extra fields from MongoDB using supabase user id
-    const user = await User.findOne({ supabaseId: data.user.id });
-
-    if (!user)
-      return res.status(404).json({ error: 'User profile not found' });
-
-    return res.status(200).json({
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
+    res.status(200).json({
+      message: "Login successful",
+      token,
       user: {
         id: user._id,
         fullName: user.fullName,
@@ -74,10 +56,15 @@ const login = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (err) {
-    res.status(500).json({ error: 'Login failed' });
+    res.status(500).json({ status: "Failed", message: err.message });
   }
 };
+const oauthCallback = (req, res) => {
+  const token = generateToken(req.user._id);
 
-module.exports = { register, login };
+  // Redirect to your frontend with the token in the URL
+  res.redirect(`${process.env.CLIENT_URL}/oauth-success?token=${token}`);
+};
+
+module.exports = { register, login, oauthCallback };

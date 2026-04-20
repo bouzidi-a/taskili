@@ -1,40 +1,30 @@
-const { supabase } = require('../lib/supabaseClient');
+
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
 
-const verifyToken = async (req, res, next) => {
+protect = async (req, res, next) => {
   try {
-    // 1. Keep your original header name (auth-token)
-    const token = req.header('auth-token');
+    let token;
 
-    if (!token)
-      return res.status(401).json({ error: 'Access Denied! No token provided.' });
+    if (req.headers.authorization?.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
 
-    // 2. Verify with Supabase (replaces jwt.verify())
-    const { data, error } = await supabase.auth.getUser(token);
+    if (!token) {
+      return res.status(401).json({ message: 'Not authorized, no token' });
+    }
 
-    if (error || !data.user)
-      return res.status(400).json({ error: 'Invalid Token!' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id).select('-password');
 
-    // 3. Fetch MongoDB user using supabase id
-    const user = await User.findOne({ supabaseId: data.user.id });
-
-    if (!user)
-      return res.status(404).json({ error: 'User profile not found' });
-
-    // 4. Attach to req.user (same shape your routes already expect)
-    req.user = {
-      id: user._id,
-      supabaseId: data.user.id,
-      fullName: user.fullName,
-      email: user.email,
-      role: user.role,
-    };
+    if (!req.user) {
+      return res.status(401).json({ message: 'User no longer exists' });
+    }
 
     next();
-
   } catch (err) {
-    res.status(500).json({ error: 'Authentication error' });
+    res.status(401).json({ message: 'Token invalid or expired' });
   }
 };
 
-module.exports = verifyToken;
+module.exports = protect;
