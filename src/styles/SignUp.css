@@ -1,0 +1,255 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue: #4361EE;
+  --blue-hover: #3451C7;
+  --text-dark: #1a1a2e;
+  --text-muted: #525252;
+  --border: #e5e7eb;
+  --input-bg: #f9fafb;
+  --white: #ffffff;
+}
+
+html, body {
+  background: #ffffff !important;
+  color: var(--text-dark) !important;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.auth-wrapper {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  background: #ffffff;
+  align-items: stretch;
+}
+
+.auth-left {
+  width: 45%;
+  background: var(--blue);
+  border-radius: 0 85px 0 0;
+  flex-shrink: 0;
+  min-height: 100vh;
+  align-self: stretch;
+}
+
+.auth-right {
+  flex: 1;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 113px;
+  height: 63px;
+  object-fit: contain;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #525252;
+  margin-top: -12px;
+}
+
+.fields-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.input-wrap { position: relative; }
+
+input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  font-size: 14px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+input::placeholder { color: #b0b7c3; }
+
+input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(67,97,238,0.12);
+  background: var(--white);
+}
+
+input[type="password"],
+input[type="text"] { padding-right: 40px; }
+
+.eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #b0b7c3;
+  display: flex;
+  align-items: center;
+}
+
+.eye-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.eye-btn:hover { color: var(--blue); }
+
+.remember-forgot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-top: -8px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #525252;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remember input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 4px;
+  accent-color: var(--blue);
+}
+
+.forgot-link {
+  color: #4361EE;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.forgot-link:hover { text-decoration: underline; }
+
+.btn-auth {
+  width: 100%;
+  padding: 13px 40px;
+  height: 52px;
+  background: #4361EE;
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 14px rgba(67,97,238,0.35);
+}
+
+.btn-auth:hover {
+  background: var(--blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(67,97,238,0.4);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #525252;
+  font-size: 12px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.social-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, box-shadow .2s;
+  padding: 0;
+}
+
+.social-btn img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.social-btn:last-child img {
+  width: 34px;
+  height: 34px;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 1024px) {
+  .auth-left { display: none; }
+  .auth-right { padding: 40px 24px; }
+}
+
+@media (max-width: 480px) {
+  .auth-right { padding: 32px 16px; }
+}

@@ -1,0 +1,202 @@
+/* ── Navbar.css ── */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 68px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8e8;
+  position: relative;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ── Logo ── */
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #1a3c8f;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.navbar__logo svg {
+  width: 36px;
+  height: 36px;
+}
+
+/* ── Right section ── */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── Post a project button ── */
+.navbar__post-btn {
+  background: #3b6ef8;
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.navbar__post-btn:hover {
+  background: #2d5ce0;
+  transform: translateY(-1px);
+}
+
+.navbar__post-btn:active {
+  transform: translateY(0);
+}
+
+/* ── User avatar + info ── */
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.navbar__user:hover {
+  background: #f4f6fb;
+}
+
+.navbar__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e7ff;
+}
+
+.navbar__user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.navbar__username {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.navbar__role {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* ── Dropdown menu ── */
+.navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  padding: 18px 20px 12px;
+  z-index: 1000;
+  animation: dropdownFadeIn 0.18s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Header inside dropdown */
+.dropdown__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dropdown__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e7ff;
+}
+
+.dropdown__user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.dropdown__username {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dropdown__role {
+  font-size: 12px;
+  
+}
+
+/* Menu items */
+.dropdown__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 0ch;
+  
+  padding: 10px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.dropdown__item:hover {
+  background: #f4f6fb;
+  color: #3b6ef8;
+}
+
+.dropdown__item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+ 
+  transition: color 0.15s ease;
+}
+
+.dropdown__item:hover svg {
+  color: #3b6ef8;
+}
+
+.dropdown__divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 6px 0;
+}

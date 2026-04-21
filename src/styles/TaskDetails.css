@@ -1,0 +1,228 @@
+.task-details-page {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  color: #333;
+}
+
+/* Banner (Replaced by Hero but kept for safety if needed elsewhere) */
+.task-details-banner {
+  background-color: #1a3c8f;
+  padding: 50px 20px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Main Layout */
+.task-details-content {
+  display: flex;
+  gap: 50px;
+  width: 100%;
+  margin: 0;
+  padding: 40px 40px;
+  box-sizing: border-box;
+}
+
+/* Left Column */
+.task-details-left {
+  flex: 2;
+}
+
+.task-details-left h2 {
+  color: #1a3c8f;
+  font-size: 24px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.task-info-group {
+  margin-bottom: 25px;
+}
+
+.task-info-label {
+  color: #a0a0a0;
+  font-size: 15px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.task-info-text {
+  color: #444;
+  font-size: 15px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.task-price-box {
+  background-color: #f5f5f5;
+  padding: 12px 20px;
+  border-radius: 4px;
+  color: #444;
+  font-size: 15px;
+  display: inline-block;
+  min-width: 250px;
+}
+
+.task-apply-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+.task-apply-btn {
+  background-color: #4b6bfb;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.task-apply-btn:hover {
+  background-color: #3a5ce5;
+}
+
+/* Right Column */
+.task-details-right {
+  flex: 1.2;
+  border-left: 1px solid #eee;
+  padding-left: 40px;
+}
+
+.task-details-right h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.related-task-slider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.slider-arrow {
+  background: transparent;
+  border: none;
+  color: #1a3c8f;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.related-task-card {
+  background-color: #f6f6f6;
+  padding: 24px;
+  border-radius: 8px;
+  flex: 1;
+  position: relative;
+}
+
+.related-task-category {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  color: #888;
+  font-size: 13px;
+}
+
+.related-task-title {
+  color: #1a3c8f;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-right: 80px; 
+}
+
+.related-task-desc {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.related-task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* ApplyTask Specific Styles */
+.task-apply-btn.applied-btn {
+  background-color: #4b6bfb;
+  border-radius: 30px;
+  opacity: 0.9;
+  cursor: default;
+}
+
+.application-success-box {
+  background-color: #f6f6f6;
+  border-radius: 0;
+  padding: 25px 30px;
+  margin-top: 40px;
+  margin-left: -40px;
+  border-top: 1px solid #eee;
+}
+
+.success-box-title {
+  color: #1a3c8f;
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.success-box-text {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.recent-task-card {
+  padding-bottom: 24px; /* Slightly adjust height for the smaller card */
+}
+
+.related-task-location {
+  color: #777;
+  font-size: 13px;
+}
+
+.related-task-price-section {
+  text-align: right;
+}
+
+.related-task-price-label {
+  color: #1a3c8f;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.related-task-price-value {
+  color: #333;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .task-details-content {
+    flex-direction: column;
+  }
+  .task-details-right {
+    border-left: none;
+    border-top: 1px solid #eee;
+    padding-left: 0;
+    padding-top: 40px;
+  }
+}
