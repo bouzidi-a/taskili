@@ -3,11 +3,25 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import NavbarTask from '../components/NavbarTask';
 import Hero from '../components/hero';
 import { tasks } from '../data/tasks';
+import { useUser } from '../context/UserContext';
 import '../styles/TaskDetails.css';
 
 const ApplyTask = () => {
   const { id } = useParams();
-  const task = tasks.find(t => t.id === parseInt(id));
+  const { myTasks = [] } = useUser();
+
+  const normalizedMyTasks = myTasks.map(t => ({
+    id: t.id,
+    title: t.title || '',
+    desc: t.description || '',
+    location: `${t.city} , ${t.wilaya} .`,
+    category: t.category || '',
+    price: `${t.price} / ${t.per}`,
+    payment: t.paymentMethod || 'Paying in cash'
+  }));
+
+  const allTasks = [...normalizedMyTasks, ...tasks];
+  const task = allTasks.find(t => t.id.toString() === id.toString());
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -15,7 +29,7 @@ const ApplyTask = () => {
   if (!task) return <Navigate to="/tasks" />;
 
   // Find related tasks
-  const relatedTasks = tasks.filter(t => t.category === task.category && t.id !== task.id);
+  const relatedTasks = allTasks.filter(t => t.category === task.category && t.id.toString() !== task.id.toString());
   
   // Make sure index is valid if relatedTasks changes
   const safeIndex = currentIndex >= relatedTasks.length ? 0 : currentIndex;

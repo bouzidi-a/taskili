@@ -1,10 +1,24 @@
 import { Link } from 'react-router-dom';
 import "../styles/menu.css";
-
 import { tasks } from '../data/tasks';
+import { useUser } from '../context/UserContext';
 
 function Menu({ searchQuery = '', filters = {} }) {
-  const filteredTasks = tasks.filter((task) => {
+  const { myTasks = [] } = useUser();
+  
+  // Normalize user posted tasks to match the data structure of tasks.js
+  const normalizedMyTasks = myTasks.map(t => ({
+    id: t.id,
+    title: t.title || '',
+    desc: t.description || '',
+    location: `${t.city} , ${t.wilaya} .`,
+    category: t.category || '',
+    price: `${t.price} / ${t.per}`
+  }));
+
+  const allTasks = [...normalizedMyTasks, ...tasks];
+
+  const filteredTasks = allTasks.filter((task) => {
     // Search query
     const query = searchQuery.toLowerCase();
     const matchSearch = 

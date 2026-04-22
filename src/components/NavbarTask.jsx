@@ -1,27 +1,9 @@
-// ── Navbar.js ──
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/NavbarTask.css';
-import logo from '../assets/logo.svg';
-import persone from '../assets/profile.jpg';
-
-// ── SVG Icons ────────────────────────────────────────────────────────────────
-
-const AskiliLogo = () => (
-  <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M18 4 L28 12 L28 24 L18 32 L8 24 L8 12 Z"
-      stroke="#1a3c8f" strokeWidth="2" fill="none"
-    />
-    <path
-      d="M18 8 L24 14 L18 28 L12 14 Z"
-      fill="#1a3c8f" opacity="0.15"
-    />
-    <line x1="18" y1="4"  x2="18" y2="10" stroke="#1a3c8f" strokeWidth="2" />
-    <line x1="28" y1="12" x2="22" y2="15" stroke="#1a3c8f" strokeWidth="2" />
-    <line x1="28" y1="24" x2="22" y2="21" stroke="#1a3c8f" strokeWidth="2" />
-  </svg>
-);
+import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
+import '../styles/NavbarTask.css'
+import logo from '../assets/logo.svg'
+import persone from '../assets/profile.jpg'
 
 const SwitchIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -29,7 +11,7 @@ const SwitchIcon = () => (
     <path d="M7 16V4m0 0L3 8m4-4l4 4" />
     <path d="M17 8v12m0 0l4-4m-4 4l-4-4" />
   </svg>
-);
+)
 
 const SupportIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -38,7 +20,7 @@ const SupportIcon = () => (
     <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
     <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
   </svg>
-);
+)
 
 const SettingsIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -54,7 +36,7 @@ const SettingsIcon = () => (
              l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09
              a1.65 1.65 0 0 0-1.51 1z" />
   </svg>
-);
+)
 
 const LogoutIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -63,39 +45,46 @@ const LogoutIcon = () => (
     <polyline points="16 17 21 12 16 7" />
     <line x1="21" y1="12" x2="9" y2="12" />
   </svg>
-);
-
-// ── Dropdown Menu ─────────────────────────────────────────────────────────────
+)
 
 const DropdownMenu = ({ user, onClose }) => {
+  const navigate = useNavigate()
+  const { role, setRole } = useUser()
+
+  const handleSwitch = () => {
+    if (role === 'Freelancer') {
+      setRole('Employer')
+      navigate('/profile')      // Employer profile page
+    } else {
+      setRole('Freelancer')
+      navigate('/tasks')        // Freelancer finds tasks
+    }
+  }
+
+  const switchLabel = role === 'Freelancer' ? 'Switch to Employer' : 'Switch to Freelancer'
+
   const menuItems = [
-    { icon: <SwitchIcon />,  label: 'Switch to Employer', action: () => {} },
-    { icon: <SupportIcon />, label: 'Support',            action: () => {} },
-    { icon: <SettingsIcon />,label: 'Settings',           action: () => {} },
-  ];
+    { icon: <SwitchIcon />,   label: switchLabel,  action: handleSwitch },
+    { icon: <SupportIcon />,  label: 'Support',    action: () => {} },
+    { icon: <SettingsIcon />, label: 'Settings',   action: () => {} },
+  ]
 
   return (
     <div className="navbar__dropdown">
-      {/* User header */}
       <div className="dropdown__header">
-        <img
-          src={user.avatar}
-          alt={user.username}
-          className="dropdown__avatar"
-        />
+        <img src={user.avatar} alt={user.username} className="dropdown__avatar" />
         <div className="dropdown__user-info">
           <span className="dropdown__username">{user.username}</span>
           <span className="dropdown__role">{user.role}</span>
         </div>
       </div>
 
-      {/* Menu items */}
       <ul className="dropdown__menu">
         {menuItems.map(({ icon, label, action }) => (
           <li key={label}>
             <button
               className="dropdown__item"
-              onClick={() => { action(); onClose(); }}
+              onClick={() => { action(); onClose() }}
             >
               {icon}
               {label}
@@ -108,7 +97,7 @@ const DropdownMenu = ({ user, onClose }) => {
         <li>
           <button
             className="dropdown__item"
-            onClick={() => { console.log('logout'); onClose(); }}
+            onClick={() => { console.log('logout'); onClose() }}
           >
             <LogoutIcon />
             Logout
@@ -116,55 +105,67 @@ const DropdownMenu = ({ user, onClose }) => {
         </li>
       </ul>
     </div>
-  );
-};
+  )
+}
 
-// ── Navbar ────────────────────────────────────────────────────────────────────
+const NavbarTask = () => {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef(null)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { profilePic, fullName, role, setRole } = useUser()
 
-const Navbar = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const navigate = useNavigate();
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/profile' || path === '/my-tasks') {
+      if (role !== 'Employer') setRole('Employer');
+    } else if (path === '/tasks') {
+      if (role !== 'Freelancer') setRole('Freelancer');
+    }
+  }, [location.pathname, role, setRole]);
 
-  // Example user — swap with real auth data
+  const displayName = fullName
+    ? `@${fullName.split(" ")[0]}`
+    : '@Romioo'
+
+  const avatar = profilePic || persone
+
   const user = {
-    username: '@Romioo',
-    role: 'Freelancer',
-    avatar: persone, // replace with real avatar URL
-  };
+    username: displayName,
+    role: role,          // ← now dynamic
+    avatar: avatar,
+  }
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
+        setDropdownOpen(false)
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <a href="/" className="navbar__logo">
-       <img src={logo} />
+        <img src={logo} alt="Askili" />
       </a>
 
-      {/* Right section */}
       <div className="navbar__right">
-        <button className="navbar__post-btn" onClick={() => navigate('/add-task')}>Post a project</button>
+        <button className="navbar__post-btn" onClick={() => navigate('/add-task')}>
+          Post a project
+        </button>
 
-        {/* User avatar + dropdown trigger */}
         <div
           className="navbar__user"
           ref={dropdownRef}
           onClick={() => setDropdownOpen((prev) => !prev)}
         >
-          <img src={user.avatar} alt={user.username} className="navbar__avatar" />
+          <img src={avatar} alt={displayName} className="navbar__avatar" />
           <div className="navbar__user-info">
-            <span className="navbar__username">{user.username}</span>
-            <span className="navbar__role">{user.role}</span>
+            <span className="navbar__username">{displayName}</span>
+            <span className="navbar__role">{role}</span>   {/* ← dynamic */}
           </div>
 
           {dropdownOpen && (
@@ -173,7 +174,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default NavbarTask
