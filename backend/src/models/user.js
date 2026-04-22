@@ -26,20 +26,27 @@ const UserSchema = new mongoose.Schema({
     enum: ["freelancer", "employer"],
     default: "employer",
   },
-   // OAuth fields
-  googleId: { type: String },
+
+  // ✅ Email verification
+  isVerified:             { type: Boolean, default: false },
+  verificationCode:       { type: String,  default: null },
+  verificationCodeExpiry: { type: Date,    default: null },
+
+  // OAuth fields
+  googleId:   { type: String },
   facebookId: { type: String },
-  avatar: { type: String }, // profile picture from OAuth
-  createdAt: { type: Date, default: Date.now },
+  avatar:     { type: String },
+  createdAt:  { type: Date, default: Date.now },
 });
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next;
+
+// ✅ Fixed: Removed 'next' entirely to work properly with 'async/await'
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
-  next;
 });
 
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);

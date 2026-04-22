@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 const Work = require("../models/Work");
-
+const Bid = require("../models/Bid");
 
 const sanitizeQuery = (query) => {
   const sanitized = {};
   for (const key in query) {
     sanitized[key] = Array.isArray(query[key])
-      ? query[key][query[key].length - 1] // ← array? take last value
-      : query[key]; // ← string? keep as is
+      ? query[key][query[key].length - 1]
+      : query[key];
   }
   return sanitized;
 };
+
 // ─── Create Work ──────────────────────────────────────────
 exports.createWork = async (req, res) => {
   try {
@@ -41,56 +42,35 @@ exports.getWorks = async (req, res) => {
     } = query;
 
     const matchStage = {};
-
-    // Status
     matchStage.status = status;
 
-    // Search in title & description
-    if (search) {
-      matchStage.$text = { $search: search };
-    }
-
-    // Category
+    if (search) matchStage.$text = { $search: search };
     if (category) matchStage.category = category;
-
-    // Skills (comma separated: ?skills=react,node)
     if (skills) {
       const skillsArr = skills.split(",").map((s) => s.trim());
       matchStage.skills = { $in: skillsArr };
     }
-
-    // Experience level
     if (level) matchStage.experienceLevel = level;
-
-    // Location
     if (location) matchStage.location = location;
-
-    // Budget type
     if (budgetType) matchStage["budget.type"] = budgetType;
-
-    // Budget range
     if (budgetMin) matchStage["budget.min"] = { $gte: parseFloat(budgetMin) };
     if (budgetMax) matchStage["budget.max"] = { $lte: parseFloat(budgetMax) };
 
-    // Sort
     const sortOptions = {
-      newest: { createdAt: -1 },
-      oldest: { createdAt: 1 },
+      newest:      { createdAt: -1 },
+      oldest:      { createdAt: 1 },
       budget_high: { "budget.max": -1 },
-      budget_low: { "budget.min": 1 },
+      budget_low:  { "budget.min": 1 },
       most_viewed: { views: -1 },
     };
     const sortStage = sortOptions[sort] || sortOptions.newest;
 
-    const pageNum = Math.max(parseInt(page), 1);
+    const pageNum  = Math.max(parseInt(page), 1);
     const limitNum = Math.min(parseInt(limit), 50);
-    const skip = (pageNum - 1) * limitNum;
+    const skip     = (pageNum - 1) * limitNum;
 
-    // Aggregation pipeline
     const pipeline = [
       { $match: matchStage },
-
-      // Join employer info
       {
         $lookup: {
           from: "users",
@@ -100,33 +80,36 @@ exports.getWorks = async (req, res) => {
         },
       },
       { $unwind: "$employer" },
-
-      // Clean up employer (only expose safe fields)
       {
         $addFields: {
           employer: {
-            _id: "$employer._id",
+            _id:      "$employer._id",
             fullName: "$employer.fullName",
-            avatar: "$employer.avatar",
+            avatar:   "$employer.avatar",
           },
         },
       },
+
+      // ✅ Join bids count
       {
-        $project: {
-          "employer.password": 0,
-          "employer.email": 0,
-          "employer.role": 0,
-          "employer.createdAt": 0,
-          "employer.__v": 0,
+        $lookup: {
+          from: "bids",
+          localField: "_id",
+          foreignField: "work",
+          as: "bids",
         },
       },
+      {
+        $addFields: {
+          totalBids: { $size: "$bids" },
+        },
+      },
+      { $project: { bids: 0 } },
 
       { $sort: sortStage },
-
-      // Pagination with total count
       {
         $facet: {
-          data: [{ $skip: skip }, { $limit: limitNum }],
+          data:  [{ $skip: skip }, { $limit: limitNum }],
           total: [{ $count: "count" }],
         },
       },
@@ -150,17 +133,38 @@ exports.getWorks = async (req, res) => {
 // ─── Get Single Work ──────────────────────────────────────
 exports.getWork = async (req, res) => {
   try {
-    const work = await Work.findById(req.params.id).populate(
-      "employer",
-      "name avatar",
-    );
+    const work = await Work.findById(req.params.id)
+      .populate("employer", "fullName avatar"); // ✅ fixed: was "name avatar"
+
     if (!work) return res.status(404).json({ message: "Work not found" });
 
-    // Increment views
+    // ✅ Get bids count for this work
+    const totalBids = await Bid.countDocuments({ work: work._id });
+
     work.views += 1;
     await work.save();
 
-    res.status(200).json({ work });
+    res.status(200).json({ work, totalBids });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ─── Get My Works (employer) ──────────────────────────────
+exports.getMyWorks = async (req, res) => {
+  try {
+    const works = await Work.find({ employer: req.user._id })
+      .sort({ createdAt: -1 });
+
+    // ✅ Add bids count to each work
+    const worksWithBids = await Promise.all(
+      works.map(async (work) => {
+        const totalBids = await Bid.countDocuments({ work: work._id });
+        return { ...work.toObject(), totalBids };
+      })
+    );
+
+    res.status(200).json({ total: works.length, works: worksWithBids });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -172,30 +176,17 @@ exports.updateWork = async (req, res) => {
     const work = await Work.findById(req.params.id);
     if (!work) return res.status(404).json({ message: "Work not found" });
 
-    // Only owner can update
     if (work.employer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
     }
-    if (
-      req.body.status &&
-      req.body.status === "completed" &&
-      work.status !== "in_progress"
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Work must be in_progress to mark as completed" });
+    if (req.body.status && req.body.status === "completed" && work.status !== "in_progress") {
+      return res.status(400).json({ message: "Work must be in_progress to mark as completed" });
     }
-
-    // Can't edit if already in progress
     if (work.status === "completed" || work.status === "cancelled") {
-      return res
-        .status(400)
-        .json({ message: `Cannot edit a work that is ${work.status}` });
+      return res.status(400).json({ message: `Cannot edit a work that is ${work.status}` });
     }
     if (req.body.status === "in_progress") {
-      return res
-        .status(400)
-        .json({ message: "Cannot manually set status to in_progress" });
+      return res.status(400).json({ message: "Cannot manually set status to in_progress" });
     }
 
     const updated = await Work.findByIdAndUpdate(req.params.id, req.body, {
@@ -209,8 +200,6 @@ exports.updateWork = async (req, res) => {
   }
 };
 
-
-
 // ─── Delete Work ──────────────────────────────────────────
 exports.deleteWork = async (req, res) => {
   try {
@@ -221,7 +210,10 @@ exports.deleteWork = async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
+    // ✅ Delete all bids for this work too
+    await Bid.deleteMany({ work: work._id });
     await work.deleteOne();
+
     res.status(200).json({ message: "Work deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });

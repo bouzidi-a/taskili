@@ -4,6 +4,7 @@ const {
   createWork,
   getWorks,
   getWork,
+  getMyWorks,  
   updateWork,
   deleteWork,
 } = require("../controllers/workController");
@@ -11,8 +12,12 @@ const { protect, restrictTo } = require("../middlewares/auth");
 const { createWorkRules } = require("../middlewares/workValidation");
 const validate = require("../middlewares/validate");
 
-router.get("/", getWorks); // public
-router.get("/:id", getWork); // public
+// ─── Public Routes ────────────────────────────────────────
+router.get("/", getWorks);                  // Get all works (with filters)
+router.get("/mine", protect, restrictTo("employer"), getMyWorks); // ✅ Get my works (employer)
+router.get("/:id", getWork);               // Get single work by ID
+
+// ─── Protected Routes (Employer only) ────────────────────
 router.post(
   "/",
   protect,
@@ -20,11 +25,13 @@ router.post(
   createWorkRules,
   validate,
   createWork,
-); // employers only
-router.put("/:id", protect, restrictTo("employer"), updateWork); // owner only
-router.delete("/:id", protect, restrictTo("employer"), deleteWork); // owner only
+); // Post a new work
+
+router.put("/:id", protect, restrictTo("employer"), updateWork);    // Update work (owner only)
+router.delete("/:id", protect, restrictTo("employer"), deleteWork); // Delete work (owner only)
 
 module.exports = router;
+
 /**
  * @swagger
  * tags:
@@ -123,6 +130,19 @@ module.exports = router;
  *         description: Work posted successfully
  *       403:
  *         description: Only employers can post works
+ */
+
+/**
+ * @swagger
+ * /api/works/mine:
+ *   get:
+ *     summary: Get my works (employer only)
+ *     tags: [Works]
+ *     responses:
+ *       200:
+ *         description: List of employer's own works with bid counts
+ *       403:
+ *         description: Only employers can access this
  */
 
 /**

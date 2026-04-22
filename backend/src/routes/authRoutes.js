@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { register, login , oauthCallback} = require('../controllers/authController');
+const { register, verifyEmail, login, oauthCallback } = require('../controllers/authController');
 const passport = require('passport');
 
 router.post('/register', register);
+router.post('/verify-email', verifyEmail); // ✅ new
 router.post('/login', login);
+
 // Google
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email'],
@@ -60,9 +62,35 @@ module.exports = router;
  *                 enum: [employer, freelancer]
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: Registration successful. Please check your email for the verification code.
  *       400:
  *         description: Email already in use
+ */
+
+/**
+ * @swagger
+ * /api/auth/verify-email:
+ *   post:
+ *     summary: Verify email with code
+ *     tags: [Auth]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [userId, code]
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email verified successfully
+ *       400:
+ *         description: Invalid or expired code
  */
 
 /**
@@ -87,6 +115,8 @@ module.exports = router;
  *     responses:
  *       200:
  *         description: Login successful
+ *       403:
+ *         description: Please verify your email before logging in
  *       401:
  *         description: Invalid credentials
  */

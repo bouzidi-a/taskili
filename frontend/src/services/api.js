@@ -1,7 +1,7 @@
 // ==========================================
 // API BASE CONFIGURATION
 // ==========================================
-const BASE_URL = 'http://localhost:3000'; // Change this to your actual backend URL
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {

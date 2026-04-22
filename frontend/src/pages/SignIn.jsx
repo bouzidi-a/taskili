@@ -14,8 +14,10 @@ function SignIn() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
+    // --- Frontend validation ---
     if (!email || !password) {
       setError("Please fill in all fields.")
       return
@@ -25,8 +27,47 @@ function SignIn() {
       setError("Please enter a valid email address.")
       return
     }
+
     setError("")
-    navigate("/tasks")
+    setLoading(true)
+
+    try {
+      // --- API call to backend ---
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Show backend error (e.g. "Invalid email or password")
+        setError(data.message || "Login failed.")
+        return
+      }
+
+      // --- Save token & user info ---
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(data.user))
+
+      // --- Navigate based on role ---
+      const role = data.user.role
+      if (role === "client") {
+        navigate("/tasks")
+      } else if (role === "freelancer") {
+        navigate("/tasks")
+      } else {
+        navigate("/tasks")
+      }
+
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -80,7 +121,9 @@ function SignIn() {
 
           {error && <p className="error-msg">{error}</p>}
 
-          <button className="btn-auth" onClick={handleSignIn}>Sign In</button>
+          <button className="btn-auth" onClick={handleSignIn} disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
 
           <div className="divider">or</div>
 

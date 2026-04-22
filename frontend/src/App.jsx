@@ -9,7 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import AddTask from "./pages/AddTask";
 import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
-
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/choose-role" element={<ChooseRole />} />
         <Route path="/tasks" element={<FindTask />} />
         <Route path="/task/:id" element={<TaskDetails />} />

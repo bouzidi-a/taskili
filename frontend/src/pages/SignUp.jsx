@@ -17,8 +17,9 @@ function SignUp() {
   const [password, setPassword] = useState("")
   const [confirm, setConfirm] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!fullName || !email || !password || !confirm) {
       setError("Please fill in all fields.")
       return
@@ -32,8 +33,37 @@ function SignUp() {
       setError("Passwords do not match.")
       return
     }
+
     setError("")
-    navigate("/choose-role")
+    setLoading(true)
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName,
+          email,
+          password,
+          confirmPassword: confirm,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || data.error || "Registration failed.")
+        return
+      }
+
+      localStorage.setItem("pendingUserId", data.userId)
+      navigate("/verify-email")
+
+    } catch (err) {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -103,7 +133,9 @@ function SignUp() {
 
           {error && <p className="error-msg">{error}</p>}
 
-          <button className="btn-auth" onClick={handleSignUp}>Sign Up</button>
+          <button className="btn-auth" onClick={handleSignUp} disabled={loading}>
+            {loading ? "Creating Account..." : "Sign Up"}
+          </button>
 
           <div className="divider">or</div>
 
