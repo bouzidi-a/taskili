@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>TASKILI | All Categories</title>
+    <style>
+        .page-header {
+            background: linear-gradient(180deg, #fff 0%, #edf2ff 100%);
+            padding: 60px 8% 40px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            color: var(--text-gray);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            display: flex;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-container input {
+            flex: 1;
+            border: none;
+            padding: 0 20px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .main-container {
+            padding: 60px 8% 80px;
+        }
+
+        .full-cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .cat-card-large {
+            height: 180px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            background-color: #222;
+            background-size: cover;
+            background-position: center;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .cat-card-large::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transition: 0.3s;
+        }
+
+        .cat-card-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(68, 97, 242, 0.2);
+        }
+
+        .cat-card-large:hover::before {
+            background: rgba(68, 97, 242, 0.85);
+        }
+
+        .cat-card-large span {
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            font-size: 18px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            padding: 0 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html"><img src="assets/Pasted image.png" alt="TASKILI" class="logo-img"></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="find.html" class="dim">Find work</a></li>
+            <li><a href="findfreelacer.html" class="dim">Find Freelancers</a></li>
+            <li><a href="#" class="dim">Log In</a></li>
+            <li><a href="#" class="dim">Sign Up</a></li>
+        </ul>
+        <a href="postform.html" class="btn-post">Post a project</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Explore Categories</h1>
+        <p>Find the right freelancer by browsing through our specialized categories</p>
+        <div class="search-container">
+            <input type="text" id="categorySearch" placeholder="Search categories (e.g. Design, Web, Writing...)">
+            <button class="btn-hire" onclick="filterCategories()"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="full-cat-grid" id="categoryGrid">
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=400')"
+                data-name="Graphic & Design">
+                <span>Graphic & Design</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=400')"
+                data-name="Medical Assistance">
+                <span>Medical Assistance</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400')"
+                data-name="Illustration">
+                <span>Illustration</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1623697899811-f2403f506899?auto=format&fit=crop&w=400')"
+                data-name="Flyers & Vouchers">
+                <span>Flyers & Vouchers</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=400')"
+                data-name="Logo Design">
+                <span>Logo Design</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=400')"
+                data-name="Education">
+                <span>Education</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=400')"
+                data-name="Article Writing">
+                <span>Article Writing</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=400')"
+                data-name="Video Editing">
+                <span>Video Editing</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400')"
+                data-name="Web Development">
+                <span>Web Development</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=400')"
+                data-name="Mobile Apps">
+                <span>Mobile Apps</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400')"
+                data-name="Digital Marketing">
+                <span>Digital Marketing</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400')"
+                data-name="Data Science">
+                <span>Data Science</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400')"
+                data-name="Virtual Assistant">
+                <span>Virtual Assistant</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1451226428352-cf66bf8a0317?auto=format&fit=crop&w=400')"
+                data-name="Translation">
+                <span>Translation</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400')"
+                data-name="Photography">
+                <span>Photography</span>
+            </a>
+            <a href="find.html" class="cat-card-large category-item"
+                style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=400')"
+                data-name="Audio & Music">
+                <span>Audio & Music</span>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-cols">
+            <div class="f-col about">
+                <img src="assets/Pasted image.png" alt="TASKILI" class="logo-img footer-logo">
+                <p>Powerful Freelance Marketplace System with ability to change the Users (Freelancers & Clients)</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="f-col">
+                <h4>For Clients</h4>
+                <ul>
+                    <li><a href="findfreelacer.html">Find Freelancers</a></li>
+                    <li><a href="postform.html">Post a project</a></li>
+                    <li><a href="refund.html">Refund Policy</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="f-col">
+                <h4>For Freelancers</h4>
+                <ul>
+                    <li><a href="find.html">Find Work</a></li>
+                    <li>Create Account</li>
+                </ul>
+            </div>
+
+            <div class="f-col">
+                <h4>Call Us</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Algeria</li>
+                    <li><i class="fas fa-phone"></i> +2130000000</li>
+                    <li><i class="fas fa-envelope"></i> taskili@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            2022 Spacelance. All right reserved
+        </div>
+    </footer>
+
+    <script>
+        function filterCategories() {
+            const searchInput = document.getElementById('categorySearch').value.toLowerCase();
+            const items = document.querySelectorAll('.category-item');
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                if (name.includes(searchInput)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('categorySearch').addEventListener('keyup', filterCategories);
+    </script>
+</body>
+
+</html>

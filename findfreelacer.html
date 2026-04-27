@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>TASKILI | Find Freelancers</title>
+    <style>
+        .page-header {
+            background: linear-gradient(180deg, #fff 0%, #edf2ff 100%);
+            padding: 60px 8% 40px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            color: var(--text-gray);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            display: flex;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-container input {
+            flex: 1;
+            border: none;
+            padding: 0 20px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            padding: 40px 8% 80px;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f1f1;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            font-size: 20px;
+            border-bottom: 2px solid #edf2ff;
+            padding-bottom: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            color: var(--text-gray);
+            font-size: 14px;
+            background-color: #f9fafb;
+            transition: var(--transition);
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            border-color: var(--primary-blue);
+            background-color: white;
+        }
+
+        .filter-btn {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background: #334ecc;
+        }
+
+        /* Freelancer Grid */
+        .freelancers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .freelancer-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f1f1;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .freelancer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(68, 97, 242, 0.08);
+            border-color: #dee7ff;
+        }
+
+        .freelancer-card .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #edf2ff;
+        }
+
+        .freelancer-card h3 {
+            color: var(--dark-blue);
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .freelancer-card .role {
+            color: var(--primary-blue);
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .freelancer-card .stars {
+            color: #ffc107;
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .freelancer-card .stars span {
+            color: var(--text-gray);
+            font-size: 13px;
+        }
+
+        .freelancer-card .details {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-top: 1px solid #f1f1f1;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .freelancer-card .bio {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .freelancer-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .freelancer-card .tag {
+            background: #f0f5ff;
+            color: var(--primary-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .freelancer-card .actions {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn-view,
+        .btn-hire {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-view {
+            background: white;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-view:hover {
+            background: #f0f5ff;
+        }
+
+        .btn-hire {
+            background: var(--primary-blue);
+            color: white;
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-hire:hover {
+            background: #334ecc;
+            border-color: #334ecc;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .star-rate {
+            transition: transform 0.2s;
+        }
+
+        .star-rate:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html"><img src="assets/Pasted image.png" alt="TASKILI" class="logo-img"></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="find.html" class="dim">Find work</a></li>
+            <li><a href="findfreelacer.html" style="color: var(--primary-blue); font-weight: 600;">Find Freelancers</a>
+            </li>
+            <li><a href="#" class="dim">Log In</a></li>
+            <li><a href="#" class="dim">Sign Up</a></li>
+        </ul>
+        <a href="postform.html" class="btn-post">Post a project</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Find Top Freelance Talent</h1>
+        <p>Discover skilled professionals for your next project</p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by name, skill, or keyword...">
+            <button class="btn-hire" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <h3>Filters</h3>
+
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="development">Web Development</option>
+                    <option value="design">Graphic Design</option>
+                    <option value="writing">Writing & Translation</option>
+                    <option value="marketing">Digital Marketing</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Hourly Rate (DA)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="minRate" placeholder="Min" min="0">
+                    <input type="number" id="maxRate" placeholder="Max" min="0">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Minimum Rating</label>
+                <select id="ratingFilter">
+                    <option value="0">Any Rating</option>
+                    <option value="4.5">4.5 & up</option>
+                    <option value="4.0">4.0 & up</option>
+                    <option value="3.0">3.0 & up</option>
+                    <option value="2.0">2.0 & up</option>
+                    <option value="1.0">1.0 & up</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Location</label>
+                <input type="text" id="locationFilter" placeholder="e.g. Algiers">
+            </div>
+
+            <button class="filter-btn" id="applyFiltersBtn">Apply Filters</button>
+        </aside>
+
+        <!-- Freelancers Grid -->
+        <div class="freelancers-grid" id="freelancersContainer">
+            <!-- Freelancer Cards will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-cols">
+            <div class="f-col about">
+                <img src="assets/Pasted image.png" alt="TASKILI" class="logo-img footer-logo">
+                <p>Powerful Freelance Marketplace System with ability to change the Users (Freelancers & Clients)</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="f-col">
+                <h4>For Clients</h4>
+                <ul>
+                    <li><a href="findfreelacer.html">Find Freelancers</a></li>
+                    <li><a href="postform.html">Post a project</a></li>
+                    <li><a href="refund.html">Refund Policy</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="f-col">
+                <h4>For Freelancers</h4>
+                <ul>
+                    <li><a href="find.html">Find Work</a></li>
+                    <li>Create Account</li>
+                </ul>
+            </div>
+
+            <div class="f-col">
+                <h4>Call Us</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Algeria</li>
+                    <li><i class="fas fa-phone"></i> +2130000000</li>
+                    <li><i class="fas fa-envelope"></i> taskili@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            2022 Spacelance. All right reserved
+        </div>
+    </footer>
+
+    <script>
+        // Dummy Data for Freelancers
+        const freelancers = [
+            {
+                id: 1,
+                name: "Amine K.",
+                role: "Full Stack Web Developer",
+                image: "https://i.pravatar.cc/150?u=amine",
+                rating: 4.9,
+                reviews: 124,
+                hourlyRate: 2500,
+                location: "Algiers",
+                category: "development",
+                completedTasks: 89,
+                bio: "Experienced Full Stack Developer with 5+ years of experience building scalable web applications. Proficient in React, Node.js, and Python. I deliver high-quality code and always meet deadlines.",
+                skills: ["React", "Node.js", "MongoDB", "Express"]
+            },
+            {
+                id: 2,
+                name: "Sarah M.",
+                role: "UI/UX & Graphic Designer",
+                image: "https://i.pravatar.cc/150?u=sarah",
+                rating: 4.8,
+                reviews: 86,
+                hourlyRate: 1800,
+                location: "Oran",
+                category: "design",
+                completedTasks: 112,
+                bio: "Passionate designer focusing on creating intuitive and beautiful user interfaces. I specialize in branding, web design, and mobile app UI. Let's make your product look amazing!",
+                skills: ["Figma", "Adobe XD", "Illustrator", "UI/UX"]
+            },
+            {
+                id: 3,
+                name: "Karim B.",
+                role: "SEO & Content Writer",
+                image: "https://i.pravatar.cc/150?u=karim",
+                rating: 4.5,
+                reviews: 42,
+                hourlyRate: 1200,
+                location: "Constantine",
+                category: "writing",
+                completedTasks: 56,
+                bio: "SEO specialist and content creator. I write engaging articles, blog posts, and website copy that ranks on Google and converts visitors into customers. Fluent in English, French, and Arabic.",
+                skills: ["SEO", "Copywriting", "Blog Writing", "Translation"]
+            },
+            {
+                id: 4,
+                name: "Meriam T.",
+                role: "Digital Marketing Expert",
+                image: "https://i.pravatar.cc/150?u=meriam",
+                rating: 5.0,
+                reviews: 210,
+                hourlyRate: 3000,
+                location: "Algiers",
+                category: "marketing",
+                completedTasks: 154,
+                bio: "Results-driven digital marketer helping businesses grow their online presence. Expertise in Facebook Ads, Google Ads, and Social Media Strategy. Let's scale your business together.",
+                skills: ["Facebook Ads", "Google Ads", "SMM", "Strategy"]
+            },
+            {
+                id: 5,
+                name: "Walid S.",
+                role: "Mobile App Developer",
+                image: "https://i.pravatar.cc/150?u=walid",
+                rating: 4.7,
+                reviews: 65,
+                hourlyRate: 2800,
+                location: "Annaba",
+                category: "development",
+                completedTasks: 43,
+                bio: "Flutter developer creating beautiful cross-platform mobile applications for iOS and Android. From idea to app store deployment, I handle the entire mobile development lifecycle.",
+                skills: ["Flutter", "Dart", "Firebase", "Mobile UI"]
+            },
+            {
+                id: 6,
+                name: "Fatima Z.",
+                role: "Brand Identity Designer",
+                image: "https://i.pravatar.cc/150?u=fatima",
+                rating: 4.6,
+                reviews: 93,
+                hourlyRate: 1500,
+                location: "Tlemcen",
+                category: "design",
+                completedTasks: 128,
+                bio: "I help businesses build strong visual identities. I create memorable logos, brand guidelines, and marketing materials that resonate with your target audience.",
+                skills: ["Logo Design", "Branding", "Photoshop", "Print"]
+            }
+        ];
+
+        const container = document.getElementById("freelancersContainer");
+
+        // Helper function to render stars
+        function getStarsHTML(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i - 0.5 <= rating) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        function renderFreelancers(data) {
+            if (data.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-gray);">No freelancers found matching your criteria.</div>';
+                return;
+            }
+
+            container.innerHTML = data.map(freelancer => `
+                <div class="freelancer-card">
+                    <img src="${freelancer.image}" alt="${freelancer.name}" class="profile-img">
+                    <h3>${freelancer.name}</h3>
+                    <div class="role">${freelancer.role}</div>
+                    
+                    <div class="stars">
+                        ${getStarsHTML(freelancer.rating)}
+                        <span>(${freelancer.reviews})</span>
+                    </div>
+
+                    <div class="details">
+                        <div class="detail-item">
+                            <span class="detail-value">${freelancer.hourlyRate} DA</span>
+                            <span class="detail-label">/ hour</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-value">${freelancer.completedTasks}</span>
+                            <span class="detail-label">Tasks</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-value"><i class="fas fa-map-marker-alt"></i></span>
+                            <span class="detail-label">${freelancer.location}</span>
+                        </div>
+                    </div>
+
+                    <div class="bio">${freelancer.bio}</div>
+
+                    <div class="tags">
+                        ${freelancer.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}
+                    </div>
+
+                    <div class="actions" id="actions-${freelancer.id}">
+                        <a href="#" class="btn-view">View Profile</a>
+                        <button class="btn-hire" style="font-family: inherit;" onclick="hireFreelancer(${freelancer.id})">Hire Me</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const category = document.getElementById("categoryFilter").value;
+            const minRate = parseInt(document.getElementById("minRate").value) || 0;
+            const maxRate = parseInt(document.getElementById("maxRate").value) || Infinity;
+            const minRating = parseFloat(document.getElementById("ratingFilter").value);
+            const location = document.getElementById("locationFilter").value.toLowerCase();
+
+            const filtered = freelancers.filter(f => {
+                const matchesSearch = f.name.toLowerCase().includes(searchTerm) ||
+                    f.role.toLowerCase().includes(searchTerm) ||
+                    f.skills.some(s => s.toLowerCase().includes(searchTerm));
+
+                const matchesCategory = category === "" || f.category === category;
+                const matchesRate = f.hourlyRate >= minRate && f.hourlyRate <= maxRate;
+                const matchesRating = f.rating >= minRating;
+                const matchesLocation = location === "" || f.location.toLowerCase().includes(location);
+
+                return matchesSearch && matchesCategory && matchesRate && matchesRating && matchesLocation;
+            });
+
+            renderFreelancers(filtered);
+        }
+
+        // Event Listeners
+        document.getElementById("searchBtn").addEventListener("click", applyFilters);
+        document.getElementById("searchInput").addEventListener("keyup", (e) => {
+            if (e.key === "Enter") applyFilters();
+        });
+        document.getElementById("applyFiltersBtn").addEventListener("click", applyFilters);
+
+        function hireFreelancer(id) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            actionsDiv.innerHTML = `
+                <div style="width: 100%; text-align: center; animation: fadeIn 0.3s ease;">
+                    <p style="color: #28a745; font-weight: 600; margin-bottom: 10px; font-size: 14px;">
+                        <i class="fas fa-check-circle"></i> Successfully hired!
+                    </p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-view" style="font-family: inherit; border-color: #dc3545; color: #dc3545;" onclick="cancelHire(${id})">Cancel</button>
+                        <button class="btn-hire" style="font-family: inherit;" onclick="completeTask(${id})">Mark Completed</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function completeTask(id) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            actionsDiv.innerHTML = `
+                <div style="width: 100%; text-align: center; animation: fadeIn 0.3s ease;">
+                    <p style="color: var(--primary-blue); font-weight: 600; margin-bottom: 10px; font-size: 14px;">
+                        <i class="fas fa-flag-checkered"></i> Task is completed!
+                    </p>
+                    <button class="btn-hire" style="width: 100%; font-family: inherit;" onclick="showRating(${id})">Rate Freelancer</button>
+                </div>
+            `;
+        }
+
+        function cancelHire(id) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            actionsDiv.innerHTML = `
+                <a href="#" class="btn-view">View Profile</a>
+                <button class="btn-hire" style="font-family: inherit;" onclick="hireFreelancer(${id})">Hire Me</button>
+            `;
+        }
+
+        function showRating(id) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            actionsDiv.innerHTML = `
+                <div style="width: 100%; text-align: center; animation: fadeIn 0.3s ease;">
+                    <p style="color: var(--dark-blue); font-weight: 600; margin-bottom: 10px; font-size: 14px;">
+                        Rate the completed task
+                    </p>
+                    <div style="color: #ffc107; font-size: 24px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: center; gap: 5px;">
+                        <i class="far fa-star star-rate" onclick="submitRating(${id}, 1)" onmouseover="hoverStars(${id}, 1)" onmouseout="resetStars(${id})"></i>
+                        <i class="far fa-star star-rate" onclick="submitRating(${id}, 2)" onmouseover="hoverStars(${id}, 2)" onmouseout="resetStars(${id})"></i>
+                        <i class="far fa-star star-rate" onclick="submitRating(${id}, 3)" onmouseover="hoverStars(${id}, 3)" onmouseout="resetStars(${id})"></i>
+                        <i class="far fa-star star-rate" onclick="submitRating(${id}, 4)" onmouseover="hoverStars(${id}, 4)" onmouseout="resetStars(${id})"></i>
+                        <i class="far fa-star star-rate" onclick="submitRating(${id}, 5)" onmouseover="hoverStars(${id}, 5)" onmouseout="resetStars(${id})"></i>
+                    </div>
+                    <button class="btn-view" style="width: 100%; font-family: inherit;" onclick="cancelHire(${id})">Cancel Rating</button>
+                </div>
+            `;
+        }
+
+        function hoverStars(id, rating) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            const stars = actionsDiv.querySelectorAll('.star-rate');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function resetStars(id) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            const stars = actionsDiv.querySelectorAll('.star-rate');
+            stars.forEach((star) => {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            });
+        }
+
+        function submitRating(id, rating) {
+            const actionsDiv = document.getElementById(`actions-${id}`);
+            actionsDiv.innerHTML = `
+                <div style="width: 100%; text-align: center; animation: fadeIn 0.3s ease;">
+                    <p style="color: #28a745; font-weight: 600; margin-bottom: 10px; font-size: 14px;">
+                        <i class="fas fa-check-circle"></i> Rated ${rating} stars! Thank you.
+                    </p>
+                    <button class="btn-view" style="width: 100%; font-family: inherit;" onclick="cancelHire(${id})">Back to Profile</button>
+                </div>
+            `;
+        }
+
+        // Initial render
+        renderFreelancers(freelancers);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Find a Task</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #fff;
+      color: #111;
+    }
+
+    .topbar {
+      background: #234aa8;
+      height: 152px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .topbar h1 {
+      color: #fff;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      width: 540px;
+      max-width: calc(100vw - 40px);
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      padding: 0 24px;
+      outline: none;
+      background: #f5f5f5;
+      font-size: 15px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 8% 80px;
+      min-height: calc(100vh - 152px);
+    }
+
+    .sidebar {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f1f1f1;
+        height: fit-content;
+    }
+
+    .sidebar h3 {
+        color: var(--dark-blue);
+        margin-bottom: 25px;
+        font-size: 20px;
+        border-bottom: 2px solid #edf2ff;
+        padding-bottom: 15px;
+    }
+
+    .filter-group {
+        margin-bottom: 25px;
+    }
+
+    .filter-group label {
+        display: block;
+        font-weight: 500;
+        color: var(--dark-blue);
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .filter-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        outline: none;
+        color: var(--text-gray);
+        font-size: 14px;
+        background-color: #f9fafb;
+        transition: var(--transition);
+    }
+
+    .filter-group input:focus {
+        border-color: var(--primary-blue);
+        background-color: white;
+    }
+
+    .content {
+      background: #fff;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      padding: 28px 30px 24px 30px;
+      border-bottom: 2px solid #d8d8d8;
+      min-height: 178px;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .task:hover {
+      background: #fafafa;
+    }
+
+    .task-left {
+      padding-right: 24px;
+    }
+
+    .task-right {
+      text-align: right;
+      color: #a5a5a5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-left: 20px;
+    }
+
+    .category {
+      font-size: 16px;
+      color: #a6a6a6;
+      margin-bottom: 28px;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      color: #111;
+    }
+
+    .desc {
+      font-size: 15px;
+      line-height: 1.55;
+      color: #444;
+      max-width: 670px;
+      margin-bottom: 24px;
+    }
+
+    .location {
+      font-size: 15px;
+      color: #777;
+    }
+
+    .price-label {
+      color: #244a9d;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 48px;
+      margin-bottom: 18px;
+    }
+
+    .price {
+      font-size: 16px;
+      color: #222;
+      font-weight: 500;
+    }
+
+    .task[hidden] {
+      display: none;
+    }
+
+    .clickable {
+      cursor: pointer;
+    }
+
+    .task-label {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .task-label:focus-visible,
+    .title:focus-visible,
+    .price-label:focus-visible,
+    .apply-btn:focus-visible,
+    .cancel-btn:focus-visible,
+    .clear-btn:focus-visible {
+      outline: 3px solid rgba(35, 74, 168, 0.35);
+      outline-offset: 3px;
+    }
+
+    .clear-btn {
+        width: 100%;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: none;
+    }
+
+    .clear-btn:hover {
+        background: #334ecc;
+    }
+
+    .clear-btn.show {
+        display: block;
+    }
+
+    .status-badge {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 12px;
+      color: #234aa8;
+      font-weight: 700;
+    }
+
+    .applied {
+      border-left: 4px solid #234aa8;
+      background: #f7faff;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding: 20px 5%;
+      }
+
+      .task {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .task-right {
+        text-align: left;
+        align-items: flex-start;
+      }
+
+      .price-label {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="index.html"><img src="assets/Pasted image.png" alt="TASKILI" class="logo-img" style="height: 40px;"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="find.html" style="color: var(--primary-blue); font-weight: 600;">Find work</a></li>
+      <li><a href="findfreelacer.html" class="dim">Find Freelancers</a></li>
+      <li><a href="#" class="dim">Log In</a></li>
+      <li><a href="#" class="dim">Sign Up</a></li>
+    </ul>
+    <a href="postform.html" class="btn-post">Post a project</a>
+  </nav>
+  <header class="topbar">
+    <h1>Find a Task</h1>
+    <input id="searchInput" class="search-input" type="text" placeholder="What are you looking for ?" />
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <h3>Filters</h3>
+
+      <div class="filter-group">
+        <label>Price (DA)</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="number" id="minPriceFilter" placeholder="Min" min="0">
+          <input type="number" id="maxPriceFilter" placeholder="Max" min="0">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>City</label>
+        <input id="cityFilter" type="text" placeholder="Alger" />
+      </div>
+
+      <div class="filter-group">
+        <label>Commune</label>
+        <input id="communeFilter" type="text" placeholder="Hydra" />
+      </div>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <input id="categoryFilter" type="text" placeholder="Education" />
+      </div>
+
+      <div class="filter-group">
+        <label>Date</label>
+        <input id="dateFilter" type="text" placeholder="xx/xx/xxxx" />
+      </div>
+
+      <button id="clearFilters" class="clear-btn">Clear filters</button>
+    </aside>
+
+    <section class="content" id="tasks"></section>
+  </main>
+
+  <script>
+    const tasks = [
+      {
+        id: 1,
+        category: "Health Care",
+        title: "Looking for a nurse",
+        desc: "I have a sick mother at home and i am looking for a nurse to come and check on her health every Sunday for a month until she get well .",
+        location: "Alger , Hydra .",
+        price: "3000 DA / session",
+        city: "alger",
+        commune: "hydra",
+        date: "04/19/2026",
+        searchText: "looking for a nurse health care alger hydra 3000 da",
+        full: "Need a nurse for home visits every Sunday for one month."
+      },
+      {
+        id: 2,
+        category: "Education",
+        title: "Looking for a teacher",
+        desc: "I am looking for a teacher to teach mathematics to my 10 years old child , he’s a little bit weak in this module and needs some support .",
+        location: "Mostaganem , Kharouba.",
+        price: "1500 DA / session",
+        city: "mostaganem",
+        commune: "kharouba",
+        date: "04/18/2026",
+        searchText: "looking for a teacher education mostaganem kharouba 1500 da",
+        full: "Need a math teacher for a 10-year-old child."
+      },
+      {
+        id: 3,
+        category: "House",
+        title: "Looking for a plumber",
+        desc: "I urgently looking for a plumber , there’s something wrong with my sink it’s been two days , the water is going everywhere in the kitchen .",
+        location: "Medea , Ouamri .",
+        price: "1000 DA / session",
+        city: "medea",
+        commune: "ouamri",
+        date: "04/17/2026",
+        searchText: "looking for a plumber house medea ouamri 1000 da",
+        full: "Need urgent plumbing help for a kitchen sink leak."
+      }
+    ];
+
+    const container = document.getElementById("tasks");
+    const searchInput = document.getElementById("searchInput");
+    const minPriceFilter = document.getElementById("minPriceFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const cityFilter = document.getElementById("cityFilter");
+    const communeFilter = document.getElementById("communeFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const dateFilter = document.getElementById("dateFilter");
+    const clearBtn = document.getElementById("clearFilters");
+
+    const appliedTasks = JSON.parse(localStorage.getItem("appliedTasks") || "[]");
+
+    function normalize(v) {
+      return (v || "").toLowerCase().trim();
+    }
+
+    function saveApplied() {
+      localStorage.setItem("appliedTasks", JSON.stringify(appliedTasks));
+    }
+
+    function renderList() {
+      container.innerHTML = tasks.map((task, index) => {
+        const applied = appliedTasks.includes(task.id);
+        return `
+          <article class="task ${applied ? "applied" : ""}" data-index="${index}" tabindex="0" role="button" aria-label="Open ${task.title}">
+            <div class="task-left">
+              <div class="category">${task.category}</div>
+              <div class="title">${task.title}${applied ? '<span class="status-badge">Applied</span>' : ''}</div>
+              <div class="desc">${task.desc}</div>
+              <div class="location">${task.location}</div>
+            </div>
+            <div class="task-right">
+              <div class="category">${task.category}</div>
+              <div>
+                <div class="price-label">The Price</div>
+                <div class="price">${task.price}</div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".task").forEach(card => {
+        const index = Number(card.dataset.index);
+        const task = tasks[index];
+        card.addEventListener("click", () => openTask(task.id));
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openTask(task.id);
+          }
+        });
+      });
+    }
+
+    function applyFilters() {
+      const q = normalize(searchInput.value);
+      const minPrice = parseInt(minPriceFilter.value) || 0;
+      const maxPrice = parseInt(maxPriceFilter.value) || Infinity;
+      const city = normalize(cityFilter.value);
+      const commune = normalize(communeFilter.value);
+      const category = normalize(categoryFilter.value);
+      const date = normalize(dateFilter.value);
+
+      document.querySelectorAll(".task").forEach((el, i) => {
+        const t = tasks[i];
+        const taskPrice = parseInt(t.price.replace(/\D/g, '')) || 0;
+        const matches =
+          (!q || t.searchText.includes(q) || t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q)) &&
+          (taskPrice >= minPrice && taskPrice <= maxPrice) &&
+          (!city || t.city.includes(city)) &&
+          (!commune || t.commune.includes(commune)) &&
+          (!category || t.category.toLowerCase().includes(category)) &&
+          (!date || t.date.toLowerCase().includes(date));
+
+        el.hidden = !matches;
+      });
+
+      const anyActive = [q, minPrice > 0, maxPrice !== Infinity, city, commune, category, date].some(Boolean);
+      clearBtn.classList.toggle("show", anyActive);
+    }
+
+    function openTask(id) {
+      location.href = `task.html?id=${id}`;
+    }
+
+    [searchInput, minPriceFilter, maxPriceFilter, cityFilter, communeFilter, categoryFilter, dateFilter].forEach(el => {
+      el.addEventListener("input", applyFilters);
+    });
+
+    clearBtn.addEventListener("click", () => {
+      [searchInput, minPriceFilter, maxPriceFilter, cityFilter, communeFilter, categoryFilter, dateFilter].forEach(el => el.value = "");
+      applyFilters();
+    });
+
+    renderList();
+    applyFilters();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,467 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-blue: #4461f2;
+    --dark-blue: #1d2b53;
+    --text-gray: #6b7280;
+    --bg-light: #f3f7ff;
+    --bg-blue-light: #f0f5ff;
+    --white: #ffffff;
+    --transition: all 0.3s ease;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--dark-blue);
+    overflow-x: hidden;
+}
+
+/* Header & Nav */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background: var(--white);
+}
+
+.logo-img {
+    height: 40px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-blue);
+}
+
+.btn-post {
+    background: var(--primary-blue);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-post:hover {
+    background: #334ecc;
+    box-shadow: 0 5px 15px rgba(68, 97, 242, 0.3);
+}
+
+/* Hero */
+.hero {
+    display: flex;
+    align-items: center;
+    padding: 60px 8% 120px;
+    background: linear-gradient(180deg, #fff 0%, #edf2ff 100%);
+}
+
+.hero-text {
+    flex: 1;
+}
+
+.hero-text h1 {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.hero-text p {
+    color: var(--text-gray);
+    margin-bottom: 35px;
+    font-size: 18px;
+    max-width: 480px;
+}
+
+.search-box {
+    display: flex;
+    background: white;
+    padding: 6px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    max-width: 520px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    padding: 0 20px;
+    outline: none;
+    font-size: 15px;
+}
+
+.btn-hire {
+    background: var(--primary-blue);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.hero-img {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-img img {
+    width: 100%;
+    max-width: 550px;
+}
+
+/* Steps / Features */
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    padding: 0 8%;
+    margin-top: -60px;
+}
+
+.step-card {
+    background: white;
+    padding: 45px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+    transition: var(--transition);
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+}
+
+.icon-wrap {
+    width: 65px;
+    height: 65px;
+    background: #f0f4ff;
+    border-radius: 18px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--primary-blue);
+    border-bottom: 3px solid #dee7ff;
+}
+
+/* Different background colors for job icons */
+.icon-bg-1 {
+    background: #fff2f2;
+}
+
+.icon-bg-2 {
+    background: #f2f7ff;
+}
+
+.icon-bg-3 {
+    background: #f2fff5;
+}
+
+/* Recently Posted Works */
+.section-header {
+    padding: 100px 8% 40px;
+}
+
+.section-subtitle {
+    color: var(--text-gray);
+}
+
+.section-header h2 span {
+    color: var(--primary-blue);
+}
+
+.job-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 0 8% 80px;
+}
+
+.job-card {
+    border: 1.5px solid #f1f1f1;
+    border-radius: 25px;
+    padding: 40px 30px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.job-card:hover {
+    border-color: var(--primary-blue);
+    box-shadow: 0 15px 40px rgba(68, 97, 242, 0.08);
+}
+
+.job-card .price {
+    font-weight: 700;
+    color: #444;
+    margin: 20px 0 10px;
+    font-size: 18px;
+}
+
+.job-card a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* Categories */
+.cat-section {
+    padding: 80px 8%;
+    text-align: center;
+}
+
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+.cat-card {
+    height: 150px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    background-color: #222;
+    background-size: cover;
+    background-position: center;
+    transition: var(--transition);
+}
+
+.cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    transition: 0.3s;
+}
+
+.cat-card:hover::before {
+    background: rgba(68, 97, 242, 0.85);
+}
+
+.cat-card span {
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+    font-size: 15px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cat-btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-more-categories {
+    border-radius: 6px;
+}
+
+.primary-text {
+    color: var(--primary-blue);
+}
+
+/* Find Best Freelancer */
+.freelancer-section {
+    background-color: white;
+    padding: 80px 8%;
+    text-align: center;
+}
+
+.freelancer-subtitle {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.freelancer-title {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.freelancer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.freelancer-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: var(--transition);
+}
+
+.freelancer-card:hover {
+    transform: translateY(-10px);
+}
+
+.profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.tags {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.tag {
+    background: #eef2ff;
+    color: #4461f2;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Footer */
+footer {
+    background: #769DEB26;
+    padding: 80px 8% 20px;
+    border-top: 1px solid #eef2ff;
+}
+
+.newsletter {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.sub-bar {
+    display: flex;
+    max-width: 650px;
+    margin: 30px auto;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+}
+
+.sub-bar input {
+    flex: 1;
+    border: none;
+    padding-left: 20px;
+    outline: none;
+}
+
+.footer-cols {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    padding-bottom: 50px;
+}
+
+.f-col h4 {
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: var(--dark-blue);
+}
+
+.f-col ul {
+    list-style: none;
+}
+
+.f-col li {
+    color: var(--text-gray);
+    margin-bottom: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.f-col li:hover {
+    color: var(--primary-blue);
+    padding-left: 5px;
+    transition: all 0.2s ease;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    width: 35px;
+    height: 35px;
+    background: white;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.social-links a:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.copyright {
+    text-align: center;
+    border-top: 1px solid #eef2ff;
+    padding-top: 30px;
+    color: #aaa;
+    font-size: 12px;
+}
