@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useUser } from "../context/useUser"
 
 function VerifyEmail() {
   const navigate = useNavigate()
+  const { setFullName, setRole, setProfilePic } = useUser()
   const [code, setCode] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -32,14 +34,13 @@ function VerifyEmail() {
         return
       }
 
-      // ✅ Save token and user
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
+      setFullName(data.user?.fullName || "")
+      setRole(data.user?.role === "freelancer" ? "Freelancer" : "Employer")
+      setProfilePic(data.user?.avatar || null)
       localStorage.removeItem("pendingUserId")
-
-      // ✅ Go to choose role
-      navigate("/choose-role")
-
+      navigate("/profile-pic")
     } catch {
       setError("Network error. Please try again.")
     } finally {

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useUser } from "../context/useUser"
 import "../styles/SignUp.css"
 import logo from "../assets/logo.svg"
 import googleIcon from "../assets/google.svg"
@@ -10,6 +11,7 @@ import appleIcon from "../assets/apple.svg"
 
 function SignUp() {
   const navigate = useNavigate()
+  const { setFullName: setGlobalName } = useUser()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [fullName, setFullName] = useState("")
@@ -38,6 +40,8 @@ function SignUp() {
     setLoading(true)
 
     try {
+      setGlobalName(fullName)
+
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,7 +63,7 @@ function SignUp() {
       localStorage.setItem("pendingUserId", data.userId)
       navigate("/verify-email")
 
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.")
     } finally {
       setLoading(false)

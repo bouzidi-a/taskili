@@ -9,7 +9,6 @@ const swaggerSpec = require('./config/swagger');
 const authRoutes         = require('./routes/authRoutes');
 const workRoutes         = require('./routes/workRoutes');
 const userRoutes         = require('./routes/userRoutes');
-const bidRoutes          = require('./routes/bidRoutes');
 const statsRoutes        = require('./routes/statsRoutes');
 const profileRoutes      = require('./routes/profileRoutes');
 const uploadRoutes       = require('./routes/uploadRoutes');
@@ -62,7 +61,6 @@ app.use(passport.initialize());
 // ─── Routes ───────────────────────────────────────────────
 app.use('/api/auth',          authLimiter, authRoutes);
 app.use('/api/works',         workRoutes);
-app.use('/api/works/:workId/bids', bidRoutes);
 app.use('/api/users',         userRoutes);
 app.use('/api/stats',         statsRoutes);
 app.use('/api/profiles',      profileRoutes);

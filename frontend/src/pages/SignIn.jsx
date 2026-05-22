@@ -53,14 +53,15 @@ function SignIn() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
 
-      // --- Navigate based on role ---
+      // --- Navigate based on role (backend uses 'employer' / 'freelancer') ---
       const role = data.user.role
-      if (role === "client") {
-        navigate("/tasks")
+      if (role === "employer") {
+        navigate("/my-tasks")
       } else if (role === "freelancer") {
         navigate("/tasks")
       } else {
-        navigate("/tasks")
+        // Fallback: no role assigned yet → choose-role page
+        navigate("/choose-role")
       }
 
     } catch {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NavbarTask from "../components/NavbarTask"; // 👈 changed
+import NavbarTask from "../components/NavbarTask";
 import Hero from "../components/hero";
 import Filter from "../components/Filter";
 import Menu from "../components/menu";
@@ -8,16 +8,15 @@ import "../App.css";
 const FindTask = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
-    price: '',
-    city: '',
-    commune: '',
-    category: '',
-    date: ''
+    category:  '',
+    budgetMin: '',
+    budgetMax: '',
+    sort:      'newest',
   });
 
   return (
     <div className="tasks-page">
-      <NavbarTask /> {/* 👈 changed */}
+      <NavbarTask />
       <Hero onSearch={setSearchQuery} />
       <div className="main-content-wrapper">
         <div className="container">

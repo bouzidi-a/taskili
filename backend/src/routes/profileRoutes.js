@@ -6,16 +6,41 @@ const {
   updateMyProfile,
   addPortfolioItem,
   deletePortfolioItem,
+  addExperience,
+  deleteExperience,
+  addEducation,
+  deleteEducation,
+  addQualification,
+  deleteQualification,
+  saveCV,
 } = require('../controllers/profileController');
 const { protect } = require('../middlewares/auth');
 
-router.get('/me',                    protect, getMyProfile);      // my profile
-router.get('/:userId',                        getProfile);        // public
-router.put('/me',                    protect, updateMyProfile);   // update
-router.post('/me/portfolio',         protect, addPortfolioItem);  // add portfolio
-router.delete('/me/portfolio/:itemId', protect, deletePortfolioItem); // delete portfolio item
+router.get('/me',                             protect, getMyProfile);       // my profile
+router.get('/:userId',                                 getProfile);         // public
+router.put('/me',                             protect, updateMyProfile);    // update
+
+// ─── Portfolio ────────────────────────────────────────────
+router.post('/me/portfolio',                  protect, addPortfolioItem);   // add portfolio item
+router.delete('/me/portfolio/:itemId',        protect, deletePortfolioItem);// delete portfolio item
+
+// ─── Experiences ──────────────────────────────────────────
+router.post('/me/experiences',                protect, addExperience);      // add experience
+router.delete('/me/experiences/:itemId',      protect, deleteExperience);   // delete experience
+
+// ─── Education ────────────────────────────────────────────
+router.post('/me/education',                  protect, addEducation);       // add education
+router.delete('/me/education/:itemId',        protect, deleteEducation);    // delete education
+
+// ─── Qualifications ───────────────────────────────────────
+router.post('/me/qualifications',             protect, addQualification);   // add qualification
+router.delete('/me/qualifications/:itemId',   protect, deleteQualification);// delete qualification
+
+// ─── CV ───────────────────────────────────────────────────
+router.post('/me/cv',                         protect, saveCV);             // save cv info
 
 module.exports = router;
+
 /**
  * @swagger
  * tags:
@@ -92,4 +117,67 @@ module.exports = router;
  *     responses:
  *       201:
  *         description: Portfolio item added
+ *
+ * /api/profiles/me/experiences:
+ *   post:
+ *     summary: Add experience
+ *     tags: [Profiles]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [title]
+ *             properties:
+ *               title:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               years:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Experience added
+ *
+ * /api/profiles/me/education:
+ *   post:
+ *     summary: Add education
+ *     tags: [Profiles]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [degree]
+ *             properties:
+ *               degree:
+ *                 type: string
+ *               school:
+ *                 type: string
+ *               years:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Education added
+ *
+ * /api/profiles/me/qualifications:
+ *   post:
+ *     summary: Add qualification
+ *     tags: [Profiles]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [title]
+ *             properties:
+ *               title:
+ *                 type: string
+ *               issuer:
+ *                 type: string
+ *               year:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Qualification added
  */

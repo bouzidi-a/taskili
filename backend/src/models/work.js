@@ -70,6 +70,22 @@ const workSchema = new mongoose.Schema(
       enum: ['open', 'in_progress', 'completed', 'cancelled'],
       default: 'open',
     },
+    wilaya: {
+  type: String,
+  required: [true, 'Wilaya is required'],
+  trim: true,
+},
+city: {
+  type: String,
+  required: [true, 'City is required'],
+  trim: true,
+},
+phone: {
+  type: String,
+  required: [true, 'Phone is required'],
+  trim: true,
+  match: [/^\+?[\d\s\-()]{7,15}$/, 'Invalid phone number'],
+},
     employer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

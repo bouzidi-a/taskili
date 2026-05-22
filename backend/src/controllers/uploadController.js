@@ -38,3 +38,13 @@ exports.uploadPortfolioFile = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.uploadCV = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No file uploaded' })
+    const fileUrl = req.file.path
+    res.status(200).json({ message: 'CV uploaded successfully', fileUrl })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+};

@@ -1,6 +1,11 @@
 // ==========================================
 // API BASE CONFIGURATION
 // ==========================================
+// ⚠️  LEGACY / UNUSED — This file is not imported anywhere in the active app.
+//     All pages make direct fetch() calls to /api/* endpoints using the Vite
+//     proxy (vite.config.mjs). The axiosClient.js is a better alternative if
+//     you want a centralised HTTP layer in the future.
+//     Do NOT delete — kept for reference.
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 // Helper function to get auth headers

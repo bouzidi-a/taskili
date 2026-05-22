@@ -11,10 +11,11 @@ const {
 const { protect, restrictTo } = require("../middlewares/auth");
 const { createWorkRules } = require("../middlewares/workValidation");
 const validate = require("../middlewares/validate");
+const bidRoutes = require("./bidRoutes");
 
 // ─── Public Routes ────────────────────────────────────────
 router.get("/", getWorks);                  // Get all works (with filters)
-router.get("/mine", protect, restrictTo("employer"), getMyWorks); // ✅ Get my works (employer)
+router.get("/mine", protect, restrictTo("employer"), getMyWorks); // ✅ Get my works (employer) — must come BEFORE /:id
 router.get("/:id", getWork);               // Get single work by ID
 
 // ─── Protected Routes (Employer only) ────────────────────
@@ -30,7 +31,12 @@ router.post(
 router.put("/:id", protect, restrictTo("employer"), updateWork);    // Update work (owner only)
 router.delete("/:id", protect, restrictTo("employer"), deleteWork); // Delete work (owner only)
 
+// ─── Nested Bid Routes ────────────────────────────────────
+// Mounted here (not in app.js) so /mine resolves before /:id
+router.use("/:workId/bids", bidRoutes);
+
 module.exports = router;
+
 
 /**
  * @swagger

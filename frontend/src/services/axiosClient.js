@@ -45,9 +45,9 @@ axiosClient.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       // Only redirect if we are not already on the login / auth pages
-      if (!window.location.pathname.startsWith('/login') &&
-          !window.location.pathname.startsWith('/register')) {
-        window.location.href = '/login';
+      if (!window.location.pathname.startsWith('/signin') &&
+          !window.location.pathname.startsWith('/signup')) {
+        window.location.href = '/signin';
       }
     }
     return Promise.reject(error);
